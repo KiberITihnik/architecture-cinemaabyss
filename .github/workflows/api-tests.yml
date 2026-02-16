@@ -2,7 +2,7 @@ name: API Tests
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, cinema ]  # ← добавлена cinema
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
@@ -34,9 +34,18 @@ jobs:
 
       - name: Start services with Docker Compose
         run: |
-          docker compose up -d
+          docker compose up --build -d  # ← --build гарантирует актуальные образы
           echo "Waiting for services to be ready..."
-          sleep 60  # 60 секунд достаточно для старта всех Go-сервисов + Kafka
+          sleep 120  # ← увеличено до 120 секунд для Kafka
+
+      - name: Verify critical services are ready
+        run: |
+          echo "Checking monolith..."
+          curl -f http://localhost:8080/health
+          echo "Checking proxy..."
+          curl -f http://localhost:8000/health
+          echo "Checking events..."
+          curl -f http://localhost:8082/health
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -49,7 +58,7 @@ jobs:
         working-directory: tests/postman
         run: npm install
 
-      - name: Run API tests via Newman (directly, not in Docker)
+      - name: Run API tests via Newman
         working-directory: tests/postman
         run: |
           npx newman run CinemaAbyss.postman_collection.json \
@@ -60,7 +69,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4  # ← v4 вместо v3 (обязательно!)
         with:
           name: test-reports
           path: tests/postman/reports/
