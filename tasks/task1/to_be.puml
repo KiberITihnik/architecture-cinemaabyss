@@ -1,0 +1,69 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+' Определяем систему как границу
+Person(user, "Пользователь", "Использует сервис через мобильные устройства, ноутбуки, Smart TV")
+
+System_Boundary(cinema_abyss, "Кинобездна") {
+    Container(api_gateway, "API Gateway", "Go / Nginx", "Единая точка входа. Маршрутизация, аутентификация, адаптация под устройство")
+    
+    Container(user_svc, "User Service", "Go", "Управление пользователями, профилями, программами лояльности")
+    Container(metadata_svc, "Metadata Service", "Go", "Метаданные фильмов: жанры, актёры, оценки, поиск")
+    Container(payment_svc, "Payment Service", "Go", "Подписки, платежи, скидки, интеграция с платёжными системами")
+    Container(video_svc, "Video Service", "Go", "Каталог видео, воспроизведение, интеграция с внешними платформами")
+    Container(reco_adapter, "Recommendation Adapter", "Go", "Передача событий во внешнюю рекомендательную систему")
+    
+    ContainerDb(user_db, "PostgreSQL (Users)", "Хранение данных пользователей")
+    ContainerDb(metadata_db, "PostgreSQL (Metadata)", "Хранение метаданных фильмов")
+    ContainerDb(payment_db, "PostgreSQL (Payments)", "Хранение подписок и платежей")
+    ContainerDb(video_db, "PostgreSQL (Video)", "Метаданные видео и права доступа")
+    ContainerDb(s3, "Amazon S3", "Объектное хранилище для видеофайлов")
+    
+    ContainerQueue(kafka, "Kafka", "Шина событий для асинхронной коммуникации (оценки, просмотры и др.)")
+}
+
+System_Ext(external_payment, "Внешняя платёжная система", "Stripe, ЮKassa и др.")
+System_Ext(external_cinemas, "Внешние онлайн-кинотеатры", "Netflix, IVI и др.")
+System_Ext(reco_system, "Внешняя рекомендательная система", "ML-сервис рекомендаций")
+
+Rel(user, api_gateway, "Использует через HTTPS")
+
+Rel(api_gateway, user_svc, "Вызывает", "HTTPS")
+Rel(api_gateway, metadata_svc, "Вызывает", "HTTPS")
+Rel(api_gateway, payment_svc, "Вызывает", "HTTPS")
+Rel(api_gateway, video_svc, "Вызывает", "HTTPS")
+
+Rel(user_svc, user_db, "Читает/пишет", "SQL")
+Rel(metadata_svc, metadata_db, "Читает/пишет", "SQL")
+Rel(payment_svc, payment_db, "Читает/пишет", "SQL")
+Rel(video_svc, video_db, "Читает/пишет", "SQL")
+Rel(video_svc, s3, "Загружает/воспроизводит", "S3 API")
+
+Rel(user_svc, kafka, "Публикует события", "Kafka")
+Rel(metadata_svc, kafka, "Публикует события", "Kafka")
+Rel(video_svc, kafka, "Публикует события", "Kafka")
+
+Rel(kafka, reco_adapter, "Потребляет события", "Kafka")
+Rel(reco_adapter, reco_system, "Отправляет данные", "HTTPS")
+
+Rel(payment_svc, external_payment, "Интеграция", "HTTPS")
+Rel(video_svc, external_cinemas, "Интеграция", "HTTPS")
+
+' Kubernetes и DevOps-инфраструктура (опционально, но полезно)
+System_Boundary(infra, "Инфраструктура") {
+    Container(k8s, "Kubernetes", "Оркестрация контейнеров")
+    Container(helm, "Helm", "Управление развёртыванием")
+    Container(ci_cd, "CI/CD Pipeline", "GitLab CI / GitHub Actions")
+}
+Rel(k8s, api_gateway, "Разворачивает", "")
+Rel(k8s, user_svc, "Разворачивает", "")
+Rel(k8s, metadata_svc, "Разворачивает", "")
+Rel(k8s, payment_svc, "Разворачивает", "")
+Rel(k8s, video_svc, "Разворачивает", "")
+Rel(k8s, reco_adapter, "Разворачивает", "")
+Rel(k8s, kafka, "Разворачивает", "")
+
+Rel(ci_cd, k8s, "Запускает развёртывание", "")
+Rel(helm, k8s, "Управляет конфигурацией", "")
+
+@enduml

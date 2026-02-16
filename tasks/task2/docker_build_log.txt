@@ -1,0 +1,136 @@
+a11111@MacBook-Pro-11111 proxy % docker-compose up --build
+WARN[0000] /Users/a11111/Documents/разработка/yandex/software-architect/architecture-cinemaabyss/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+[+] Building 7.5s (51/51) FINISHED                                                                                                                                                                   
+ => [internal] load local bake definitions                                                                                                                                                      0.0s
+ => => reading from stdin 2.72kB                                                                                                                                                                0.0s
+ => [monolith internal] load build definition from Dockerfile                                                                                                                                   0.0s
+ => => transferring dockerfile: 601B                                                                                                                                                            0.0s
+ => [movies-service internal] load build definition from Dockerfile                                                                                                                             0.0s
+ => => transferring dockerfile: 619B                                                                                                                                                            0.0s
+ => [events-service internal] load build definition from Dockerfile                                                                                                                             0.0s
+ => => transferring dockerfile: 342B                                                                                                                                                            0.0s
+ => [proxy-service internal] load build definition from Dockerfile                                                                                                                              0.0s
+ => => transferring dockerfile: 339B                                                                                                                                                            0.0s
+ => [movies-service internal] load metadata for docker.io/library/golang:1.23-alpine                                                                                                            0.8s
+ => [monolith internal] load metadata for docker.io/library/alpine:latest                                                                                                                       0.8s
+ => [proxy-service internal] load metadata for docker.io/library/golang:1.22-alpine                                                                                                             0.8s
+ => [movies-service internal] load .dockerignore                                                                                                                                                0.0s
+ => => transferring context: 2B                                                                                                                                                                 0.0s
+ => [monolith internal] load .dockerignore                                                                                                                                                      0.0s
+ => => transferring context: 2B                                                                                                                                                                 0.0s
+ => [monolith builder 1/6] FROM docker.io/library/golang:1.23-alpine@sha256:383395b794dffa5b53012a212365d40c8e37109a626ca30d6151c8348d380b5f                                                    0.0s
+ => => resolve docker.io/library/golang:1.23-alpine@sha256:383395b794dffa5b53012a212365d40c8e37109a626ca30d6151c8348d380b5f                                                                     0.0s
+ => [events-service stage-1 1/4] FROM docker.io/library/alpine:latest@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659                                                   0.0s
+ => => resolve docker.io/library/alpine:latest@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659                                                                          0.0s
+ => [movies-service internal] load build context                                                                                                                                                0.0s
+ => => transferring context: 110B                                                                                                                                                               0.0s
+ => [monolith internal] load build context                                                                                                                                                      0.0s
+ => => transferring context: 110B                                                                                                                                                               0.0s
+ => [events-service internal] load .dockerignore                                                                                                                                                0.0s
+ => => transferring context: 2B                                                                                                                                                                 0.0s
+ => [proxy-service internal] load .dockerignore                                                                                                                                                 0.0s
+ => => transferring context: 2B                                                                                                                                                                 0.0s
+ => CACHED [events-service stage-1 2/4] RUN apk --no-cache add ca-certificates                                                                                                                  0.0s
+ => CACHED [events-service stage-1 3/4] WORKDIR /root/                                                                                                                                          0.0s
+ => CACHED [movies-service builder 2/6] WORKDIR /app                                                                                                                                            0.0s
+ => CACHED [monolith builder 3/6] COPY go.mod ./                                                                                                                                                0.0s
+ => CACHED [monolith builder 4/6] RUN go mod download                                                                                                                                           0.0s
+ => CACHED [monolith builder 5/6] COPY . .                                                                                                                                                      0.0s
+ => CACHED [monolith builder 6/6] RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o monolith .                                                                                     0.0s
+ => CACHED [monolith stage-1 4/4] COPY --from=builder /app/monolith .                                                                                                                           0.0s
+ => CACHED [movies-service builder 3/6] COPY go.mod ./                                                                                                                                          0.0s
+ => CACHED [movies-service builder 4/6] RUN go mod download                                                                                                                                     0.0s
+ => CACHED [movies-service builder 5/6] COPY . .                                                                                                                                                0.0s
+ => CACHED [movies-service builder 6/6] RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o movies-service .                                                                         0.0s
+ => CACHED [movies-service stage-1 4/4] COPY --from=builder /app/movies-service .                                                                                                               0.0s
+ => [events-service builder 1/6] FROM docker.io/library/golang:1.22-alpine@sha256:1699c10032ca2582ec89a24a1312d986a3f094aed3d5c1147b19880afe40e052                                              0.0s
+ => => resolve docker.io/library/golang:1.22-alpine@sha256:1699c10032ca2582ec89a24a1312d986a3f094aed3d5c1147b19880afe40e052                                                                     0.0s
+ => [proxy-service internal] load build context                                                                                                                                                 0.0s
+ => => transferring context: 77B                                                                                                                                                                0.0s
+ => [movies-service] exporting to image                                                                                                                                                         0.1s
+ => => exporting layers                                                                                                                                                                         0.0s
+ => => exporting manifest sha256:8b1fa40a9f5b422ee5f53be66d34f201273a4aa9e37e3a4bbf598a12b23f5eff                                                                                               0.0s
+ => => exporting config sha256:6646521a9b0f2422e2ad04dbeff021608e8650a4f2e0f1a0e3e4d54b686de0d3                                                                                                 0.0s
+ => => exporting attestation manifest sha256:5897e74eb2eafacf2080ec471231b0cd0906f34473a937bfed21f3ec642bdd5e                                                                                   0.0s
+ => => exporting manifest list sha256:80ba1e30da318b49c63de666462cc268544c06dd90f6631d511001d050b84332                                                                                          0.0s
+ => => naming to docker.io/library/architecture-cinemaabyss-movies-service:latest                                                                                                               0.0s
+ => => unpacking to docker.io/library/architecture-cinemaabyss-movies-service:latest                                                                                                            0.0s
+ => [events-service internal] load build context                                                                                                                                                0.0s
+ => => transferring context: 3.42kB                                                                                                                                                             0.0s
+ => [monolith] exporting to image                                                                                                                                                               0.1s
+ => => exporting layers                                                                                                                                                                         0.0s
+ => => exporting manifest sha256:9d14103cdf61834bc07ba50563afd044e623c2d0dbba6864787c58980ad3a5f7                                                                                               0.0s
+ => => exporting config sha256:25b061349a2bec3a0424d5fcb71be8e41797dcdba034b127f748f82df817d034                                                                                                 0.0s
+ => => exporting attestation manifest sha256:93fdeb93c80afe6d7e9dfe363181967b406c279a5647510f5acf250177589177                                                                                   0.0s
+ => => exporting manifest list sha256:0f6c16376f3855861ec9cc3c143069f9fc72f464241238dca6bc31f184c680be                                                                                          0.0s
+ => => naming to docker.io/library/architecture-cinemaabyss-monolith:latest                                                                                                                     0.0s
+ => => unpacking to docker.io/library/architecture-cinemaabyss-monolith:latest                                                                                                                  0.0s
+ => CACHED [proxy-service builder 2/6] WORKDIR /app                                                                                                                                             0.0s
+ => CACHED [events-service builder 3/6] COPY go.mod go.sum ./                                                                                                                                   0.0s
+ => CACHED [events-service builder 4/6] RUN go mod download                                                                                                                                     0.0s
+ => CACHED [proxy-service builder 3/6] COPY go.mod go.sum ./                                                                                                                                    0.0s
+ => CACHED [proxy-service builder 4/6] RUN go mod download                                                                                                                                      0.0s
+ => CACHED [proxy-service builder 5/6] COPY main.go .                                                                                                                                           0.0s
+ => CACHED [proxy-service builder 6/6] RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o proxy .                                                                                   0.0s
+ => CACHED [proxy-service stage-1 4/4] COPY --from=builder /app/proxy .                                                                                                                         0.0s
+ => [events-service builder 5/6] COPY main.go .                                                                                                                                                 0.0s
+ => [proxy-service] exporting to image                                                                                                                                                          0.1s
+ => => exporting layers                                                                                                                                                                         0.0s
+ => => exporting manifest sha256:81ef94b61d98eaafea34199271d4d5965bc883bd1f43523027dc12cc3f625efb                                                                                               0.0s
+ => => exporting config sha256:1fd491ef08bd9650543f32667b3cf0c7869a24f3afda071798d7a77245c27f33                                                                                                 0.0s
+ => => exporting attestation manifest sha256:4239d0925d39c4b5c9fe767d85ff78f912f47c750e9a9f0689c245ae8fd298e1                                                                                   0.0s
+ => => exporting manifest list sha256:fe5368f1f9339113f26379eac0a41e4ca7acc79b75fd373e8fa3064b39a340ff                                                                                          0.0s
+ => => naming to docker.io/library/architecture-cinemaabyss-proxy-service:latest                                                                                                                0.0s
+ => => unpacking to docker.io/library/architecture-cinemaabyss-proxy-service:latest                                                                                                             0.0s
+ => [events-service builder 6/6] RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o events .                                                                                        5.6s
+ => [movies-service] resolving provenance for metadata file                                                                                                                                     0.1s
+ => [monolith] resolving provenance for metadata file                                                                                                                                           0.0s
+ => [proxy-service] resolving provenance for metadata file                                                                                                                                      0.0s
+ => [events-service stage-1 4/4] COPY --from=builder /app/events .                                                                                                                              0.0s
+ => [events-service] exporting to image                                                                                                                                                         0.4s
+ => => exporting layers                                                                                                                                                                         0.3s
+ => => exporting manifest sha256:d568067f33cd10a18bb061b939a10ba99a7b7c8362e4c80e1345f22b87cdc84b                                                                                               0.0s
+ => => exporting config sha256:7242b98a5931bf6a5dbf7f36f31bf06f25035885e9b531e86df5d2ef5840de65                                                                                                 0.0s
+ => => exporting attestation manifest sha256:95c73d4551b5cfdf3252a49510bfe70e6e399006c51f2306a5b65c0f99695276                                                                                   0.0s
+ => => exporting manifest list sha256:51856b23c117b5f9cd8a3d6254a3487bfe82774bb5ea39fc0525b2c627e8e7e7                                                                                          0.0s
+ => => naming to docker.io/library/architecture-cinemaabyss-events-service:latest                                                                                                               0.0s
+ => => unpacking to docker.io/library/architecture-cinemaabyss-events-service:latest                                                                                                            0.1s
+ => [events-service] resolving provenance for metadata file                                                                                                                                     0.0s
+[+] up 12/12
+ ✔ Image architecture-cinemaabyss-proxy-service  Built                                                                                                                                           7.6s
+ ✔ Image architecture-cinemaabyss-events-service Built                                                                                                                                           7.6s
+ ✔ Image architecture-cinemaabyss-monolith       Built                                                                                                                                           7.6s
+ ✔ Image architecture-cinemaabyss-movies-service Built                                                                                                                                           7.6s
+ ✔ Container cinemaabyss-zookeeper               Running                                                                                                                                         0.0s
+ ✔ Container cinemaabyss-postgres                Running                                                                                                                                         0.0s
+ ✔ Container cinemaabyss-kafka                   Running                                                                                                                                         0.0s
+ ✔ Container cinemaabyss-movies-service          Recreated                                                                                                                                       0.3s
+ ✔ Container cinemaabyss-kafka-ui                Running                                                                                                                                         0.0s
+ ✔ Container cinemaabyss-monolith                Recreated                                                                                                                                       0.3s
+ ✔ Container cinemaabyss-events-service          Recreated                                                                                                                                       0.2s
+ ✔ Container cinemaabyss-proxy-service           Recreated                                                                                                                                       0.2s
+Attaching to cinemaabyss-events-service, cinemaabyss-kafka, cinemaabyss-kafka-ui, cinemaabyss-monolith, cinemaabyss-movies-service, cinemaabyss-postgres, cinemaabyss-proxy-service, cinemaabyss-zookeeper
+cinemaabyss-monolith  | 2026/02/16 16:12:52 Successfully connected to database
+cinemaabyss-monolith  | 2026/02/16 16:12:52 Starting server on port 8080
+cinemaabyss-movies-service  | 2026/02/16 16:12:52 Successfully connected to database
+cinemaabyss-movies-service  | 2026/02/16 16:12:52 Starting movies microservice on port 8081
+cinemaabyss-events-service  | 2026/02/16 16:12:52 🚀 Events service listening on :8082, publishing to Kafka at [kafka:9092]
+cinemaabyss-events-service  | 2026/02/16 16:12:52 ✅ Consumer started for topic: movie-events
+cinemaabyss-events-service  | 2026/02/16 16:12:52 ✅ Consumer started for topic: user-events
+cinemaabyss-events-service  | 2026/02/16 16:12:52 ✅ Consumer started for topic: payment-events
+cinemaabyss-proxy-service   | 2026/02/16 16:12:52 Starting proxy on port 8000
+cinemaabyss-kafka           | [2026-02-16 16:12:52,544] INFO [GroupCoordinator 1001]: Dynamic Member with unknown member id joins group events-service-group in Stable state. Created a new member id events@e482c7d05674 (github.com/segmentio/kafka-go)-425d0a98-3727-492e-9ed0-734f7da2377b for this member and add to the group. (kafka.coordinator.group.GroupCoordinator)
+cinemaabyss-kafka           | [2026-02-16 16:12:52,560] INFO [GroupCoordinator 1001]: Preparing to rebalance group events-service-group in state PreparingRebalance with old generation 1 (__consumer_offsets-1) (reason: Adding new member events@e482c7d05674 (github.com/segmentio/kafka-go)-425d0a98-3727-492e-9ed0-734f7da2377b with group instance id None) (kafka.coordinator.group.GroupCoordinator)
+cinemaabyss-kafka           | [2026-02-16 16:12:52,592] INFO [GroupCoordinator 1001]: Dynamic Member with unknown member id joins group events-service-group in PreparingRebalance state. Created a new member id events@e482c7d05674 (github.com/segmentio/kafka-go)-85aa40fc-4431-4a15-b434-581af01693ed for this member and add to the group. (kafka.coordinator.group.GroupCoordinator)
+cinemaabyss-kafka           | [2026-02-16 16:12:52,598] INFO [GroupCoordinator 1001]: Dynamic Member with unknown member id joins group events-service-group in PreparingRebalance state. Created a new member id events@e482c7d05674 (github.com/segmentio/kafka-go)-6f6e594f-c047-4ca1-a5bb-36e67110e77a for this member and add to the group. (kafka.coordinator.group.GroupCoordinator)
+cinemaabyss-kafka-ui        | 2026-02-16 16:12:55,393 DEBUG [parallel-2] c.p.k.u.s.ClustersStatisticsScheduler: Start getting metrics for kafkaCluster: cinemaabyss
+cinemaabyss-kafka-ui        | 2026-02-16 16:12:55,495 DEBUG [parallel-5] c.p.k.u.s.ClustersStatisticsScheduler: Metrics updated for cluster: cinemaabyss
+cinemaabyss-kafka           | [2026-02-16 16:13:19,148] INFO [GroupCoordinator 1001]: Member events@00cb8a230f0a (github.com/segmentio/kafka-go)-3aac4050-aebe-4bff-9075-cd31470c1cb2 in group events-service-group has failed, removing it from the group (kafka.coordinator.group.GroupCoordinator)
+cinemaabyss-kafka           | [2026-02-16 16:13:19,160] INFO [GroupCoordinator 1001]: Member events@00cb8a230f0a (github.com/segmentio/kafka-go)-29813871-0865-46b0-b55a-0a26bd130e57 in group events-service-group has failed, removing it from the group (kafka.coordinator.group.GroupCoordinator)
+cinemaabyss-kafka           | [2026-02-16 16:13:19,162] INFO [GroupCoordinator 1001]: Member events@00cb8a230f0a (github.com/segmentio/kafka-go)-b871a57f-21b1-4d3c-8530-a64c0e94aa1d in group events-service-group has failed, removing it from the group (kafka.coordinator.group.GroupCoordinator)
+cinemaabyss-kafka           | [2026-02-16 16:13:19,167] INFO [GroupCoordinator 1001]: Stabilized group events-service-group generation 2 (__consumer_offsets-1) (kafka.coordinator.group.GroupCoordinator)
+cinemaabyss-kafka           | [2026-02-16 16:13:19,186] INFO [GroupCoordinator 1001]: Assignment received from leader for group events-service-group for generation 2 (kafka.coordinator.group.GroupCoordinator)
+cinemaabyss-kafka-ui        | 2026-02-16 16:13:25,396 DEBUG [parallel-6] c.p.k.u.s.ClustersStatisticsScheduler: Start getting metrics for kafkaCluster: cinemaabyss
+cinemaabyss-kafka-ui        | 2026-02-16 16:13:25,454 DEBUG [parallel-1] c.p.k.u.s.ClustersStatisticsScheduler: Metrics updated for cluster: cinemaabyss
+
+
