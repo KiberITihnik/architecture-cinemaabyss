@@ -61,6 +61,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+          
       # === Movies Service ===
       - name: Extract metadata (tags, labels) for Movies Service
         id: meta-movies
